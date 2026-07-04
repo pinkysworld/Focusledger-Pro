@@ -1,749 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focusledger - Privacy-First Productivity Tracking for Mac</title>
-    <meta name="description" content="Focusledger: Automatic activity tracking, AI insights, visual timeline with screenshots. Know where your time goes. All on-device.">
-    <meta name="keywords" content="time tracking, productivity, macOS, Apple Intelligence, focus timer, pomodoro, work journal, activity tracker">
-    <meta property="og:title" content="Focusledger - Know Where Your Time Goes">
-    <meta property="og:description" content="Automatic activity tracking with AI-powered insights. 100% private, runs entirely on your Mac.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://focusledgerapp.com/">
-    <link rel="canonical" href="https://focusledgerapp.com/">
-    <style>
-        :root {
-            --primary: #5E5CE6;
-            --primary-dark: #4B4ACF;
-            --secondary: #30D158;
-            --background: #0D0D0D;
-            --surface: #1C1C1E;
-            --surface-elevated: #2C2C2E;
-            --text-primary: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --border: #38383A;
-            --gradient-start: #5E5CE6;
-            --gradient-end: #BF5AF2;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: var(--background);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(13, 13, 13, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 16px 0;
-        }
-        
-        nav .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.2s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-        
-        .download-btn {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background 0.2s;
-        }
-        
-        .download-btn:hover {
-            background: var(--primary-dark);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 160px 0 100px;
-            text-align: center;
-            background: radial-gradient(ellipse at top, rgba(94, 92, 230, 0.15), transparent 50%);
-        }
-        
-        .hero h1 {
-            font-size: 64px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            line-height: 1.1;
-        }
-        
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .hero p {
-            font-size: 20px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            padding: 16px 32px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text-primary);
-            padding: 16px 32px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-        
-        .btn-secondary:hover {
-            background: var(--surface-elevated);
-            transform: translateY(-2px);
-        }
-        
-        .app-badge {
-            margin-top: 24px;
-        }
-        
-        .app-badge img {
-            height: 48px;
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 100px 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-title h2 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-        
-        .section-title p {
-            color: var(--text-secondary);
-            font-size: 18px;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-        }
-        
-        .feature-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            transition: all 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-        }
-        
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        
-        .feature-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-        
-        /* Privacy Section */
-        .privacy-section {
-            padding: 100px 0;
-            background: var(--surface);
-        }
-        
-        .privacy-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-        
-        .privacy-text h2 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 24px;
-        }
-        
-        .privacy-text p {
-            color: var(--text-secondary);
-            font-size: 18px;
-            margin-bottom: 32px;
-        }
-        
-        .privacy-features {
-            list-style: none;
-        }
-        
-        .privacy-features li {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-            font-size: 16px;
-        }
-        
-        .privacy-features li::before {
-            content: "✓";
-            color: var(--secondary);
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .privacy-graphic {
-            background: var(--surface-elevated);
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-        }
-        
-        .privacy-graphic .icon {
-            font-size: 80px;
-            margin-bottom: 24px;
-        }
-        
-        .privacy-graphic h3 {
-            font-size: 24px;
-            margin-bottom: 12px;
-        }
-        
-        .privacy-graphic p {
-            color: var(--text-secondary);
-        }
-        
-        /* Pricing Section */
-        .pricing {
-            padding: 100px 0;
-        }
-        
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .pricing-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-        }
-        
-        .pricing-card.featured {
-            border-color: var(--primary);
-            position: relative;
-        }
-        
-        .pricing-card.featured::before {
-            content: "BEST VALUE";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .pricing-card h3 {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        .pricing-card .price {
-            font-size: 48px;
-            font-weight: 700;
-            margin: 20px 0;
-        }
-        
-        .pricing-card .price span {
-            font-size: 18px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-        
-        .pricing-card ul {
-            list-style: none;
-            margin: 24px 0;
-            text-align: left;
-        }
-        
-        .pricing-card li {
-            padding: 8px 0;
-            color: var(--text-secondary);
-        }
-        
-        .pricing-card li.included::before {
-            content: "✓ ";
-            color: var(--secondary);
-        }
-        
-        .pricing-card li.excluded::before {
-            content: "— ";
-            color: var(--text-secondary);
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 60px 0 30px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-brand p {
-            color: var(--text-secondary);
-            margin-top: 16px;
-            font-size: 14px;
-        }
-        
-        .footer-links h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .footer-links ul {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-        
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--text-primary);
-        }
-        
-        .footer-bottom {
-            border-top: 1px solid var(--border);
-            padding-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .language-selector {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .language-selector select {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 40px;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .privacy-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .footer-bottom {
-                flex-direction: column;
-                gap: 16px;
-                text-align: center;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focusledger Pro and Lite for macOS</title>
+  <meta name="description" content="Focusledger is a private macOS productivity tracker. Lite is free/PWYW for focus timer, goals, journal, and notes. Pro adds automatic activity tracking, timelines, screenshots, and analytics.">
+  <meta property="og:title" content="Focusledger Pro and Lite for macOS">
+  <meta property="og:description" content="Private, local-first productivity tracking for Mac. Lite is free/PWYW. Pro adds automatic timelines and analytics.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://minh.systems/Focusledger-Pro/">
+  <meta property="og:image" content="https://minh.systems/Focusledger-Pro/assets/focusledger-pro-gumroad-cover.png">
+  <link rel="canonical" href="https://minh.systems/Focusledger-Pro/">
+  <style>
+    :root {
+      --bg: #0a0d10;
+      --panel: #111820;
+      --panel-2: #17202a;
+      --text: #f4f7f8;
+      --muted: #aab6c2;
+      --line: rgba(255,255,255,.12);
+      --green: #24c86a;
+      --teal: #20d3b1;
+      --blue: #62a7ff;
+      --amber: #ffb545;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(32,211,177,.18), transparent 28rem),
+        radial-gradient(circle at 90% 12%, rgba(98,167,255,.16), transparent 30rem),
+        linear-gradient(180deg, #090c0f 0%, #0e141a 44%, #f3f6f7 44%, #f3f6f7 100%);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10,13,16,.78);
+      backdrop-filter: blur(18px);
+    }
+    nav {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand { font-weight: 760; letter-spacing: 0; text-decoration: none; }
+    .navlinks { display: flex; align-items: center; gap: 18px; }
+    .navlinks a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      text-decoration: none;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .primary { background: var(--green); color: #041008; border-color: transparent; }
+    .secondary { background: rgba(255,255,255,.08); color: var(--text); }
+    .hero {
+      min-height: calc(100vh - 66px);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(360px, 1.1fr);
+      gap: 44px;
+      align-items: center;
+      padding: 68px 0 56px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #ccefe3;
+      background: rgba(36,200,106,.12);
+      border: 1px solid rgba(36,200,106,.28);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: .94;
+      letter-spacing: 0;
+      margin: 0 0 22px;
+      max-width: 760px;
+    }
+    .lead {
+      font-size: clamp(18px, 2.4vw, 23px);
+      color: #d5dee5;
+      max-width: 650px;
+      margin: 0 0 30px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+    .facts { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 14px; }
+    .facts span { border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,.05); }
+    .cover-stack { display: grid; gap: 16px; }
+    .cover-stack img {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .cover-stack img:first-child { transform: translateX(16px); }
+    section { padding: 80px 0; }
+    .dark { color: var(--text); }
+    .light { color: #111820; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+    h2 { font-size: clamp(34px, 5vw, 56px); line-height: 1; margin: 0; letter-spacing: 0; }
+    .section-head p { max-width: 520px; color: var(--muted); margin: 0; }
+    .light .section-head p { color: #5e6d78; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255,255,255,.055);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 20px; }
+    .card p { margin: 0; color: var(--muted); }
+    .light .card {
+      background: #fff;
+      border-color: rgba(17,24,32,.1);
+      box-shadow: 0 12px 36px rgba(17,24,32,.08);
+    }
+    .light .card p { color: #5e6d78; }
+    .pricing { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; align-items: stretch; }
+    .price-card {
+      background: #fff;
+      color: #101820;
+      border: 1px solid rgba(17,24,32,.12);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 18px 52px rgba(17,24,32,.1);
+    }
+    .price-card img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+    .price-body { padding: 24px; }
+    .price-row { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 8px; }
+    .price-row h3 { font-size: 30px; line-height: 1; margin: 0; }
+    .price { font-size: 28px; font-weight: 830; color: #0a1218; white-space: nowrap; }
+    .price-card p { color: #5d6a75; margin: 0 0 18px; }
+    ul { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 10px; }
+    li { display: flex; gap: 9px; align-items: start; color: #34424d; }
+    li:before { content: "✓"; color: var(--green); font-weight: 900; }
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      color: #111820;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 18px 52px rgba(17,24,32,.08);
+    }
+    th, td { padding: 15px 16px; border-bottom: 1px solid rgba(17,24,32,.08); text-align: left; }
+    th { background: #eaf0f4; font-size: 14px; }
+    td:not(:first-child), th:not(:first-child) { text-align: center; }
+    .yes { color: #148a45; font-weight: 900; }
+    .no { color: #9aa5ad; }
+    .privacy-band {
+      background: #0c1218;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .footer { padding: 34px 0; color: #6b7782; font-size: 14px; }
+    @media (max-width: 860px) {
+      .navlinks a:not(.button) { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 48px; }
+      .cover-stack img:first-child { transform: none; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 14px; }
+      .grid, .pricing { grid-template-columns: 1fr; }
+      th, td { padding: 13px 10px; font-size: 14px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="container">
-            <a href="https://focusledgerapp.com/" class="logo">Focusledger</a>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#privacy">Privacy</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="support.html">Support</a></li>
-            </ul>
-            <a href="https://apps.apple.com/app/focusledger" class="download-btn">Get Focusledger</a>
-        </div>
+  <script>
+    window.FOCUSLEDGER_LITE_URL = "https://michelpicker.gumroad.com/l/focusledger-lite";
+    window.FOCUSLEDGER_PRO_URL = "https://michelpicker.gumroad.com/l/focusledger";
+  </script>
+  <header>
+    <nav class="wrap">
+      <a class="brand" href="/">minh.systems / Focusledger</a>
+      <div class="navlinks">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#compare">Compare</a>
+        <a class="button primary" href="https://michelpicker.gumroad.com/l/focusledger">Get Pro</a>
+      </div>
     </nav>
+  </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Know Where Your <span>Time Goes</span></h1>
-            <p>Focusledger automatically tracks your activities, provides AI-powered insights with visual timelines and screenshots — all while keeping your data 100% private on your Mac.</p>
-            <div class="hero-buttons">
-                <a href="https://apps.apple.com/app/focusledger" class="btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                    Get Focusledger
-                </a>
-                <a href="https://apps.apple.com/app/focusledger-lite" class="btn-secondary">Get Focusledger Lite</a>
-            </div>
-            <div class="app-badge">
-                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 24px;">macOS 26+ • Apple Intelligence • Both available on the Mac App Store</p>
-            </div>
+  <main>
+    <section class="hero wrap dark">
+      <div>
+        <div class="eyebrow">Direct Mac download. No subscription.</div>
+        <h1>Focusledger Pro and Lite</h1>
+        <p class="lead">A private macOS productivity companion. Lite gives you focus sessions, goals, notes, and journaling. Pro adds automatic app tracking, visual timelines, optional screenshots, and detailed analytics.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://michelpicker.gumroad.com/l/focusledger">Buy Pro for $19 launch</a>
+          <a class="button secondary" href="https://michelpicker.gumroad.com/l/focusledger-lite">Get Lite free/PWYW</a>
         </div>
+        <div class="facts">
+          <span>macOS 26.0+</span>
+          <span>Local-first data</span>
+          <span>Developer ID notarized app</span>
+          <span>Apple Intelligence for AI features</span>
+        </div>
+      </div>
+      <div class="cover-stack" aria-label="Focusledger product covers">
+        <img src="assets/focusledger-pro-gumroad-cover.png" alt="Focusledger Pro cover showing timeline analytics">
+        <img src="assets/focusledger-lite-gumroad-cover.png" alt="Focusledger Lite cover showing focus timer and goals">
+      </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Powerful Features</h2>
-                <p>Everything you need to understand and improve your productivity</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⏱️</div>
-                    <h3>Automatic Time Tracking</h3>
-                    <p>Silently monitors which apps you use throughout the day. No manual timers or input required. Smart categorization of 500+ applications.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📸</div>
-                    <h3>Visual Timeline</h3>
-                    <p>See your entire day as a visual timeline with periodic screenshots. Understand exactly what you worked on and when.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <h3>AI-Powered Insights</h3>
-                    <p>Discover your peak productivity hours, identify distractions, and get personalized recommendations — all powered by Apple Intelligence on-device.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Advanced Analytics</h3>
-                    <p>Visualize your productivity patterns with stunning charts. Compare days, weeks, and months. Export reports in multiple formats.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Focus Sessions</h3>
-                    <p>Structured deep work sessions with built-in Pomodoro timer. Block distracting websites and apps. Track your focus streaks.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📓</div>
-                    <h3>Daily Journals</h3>
-                    <p>AI-generated daily work journals that summarize what you accomplished. Keep a record of your professional growth.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Goals & Streaks</h3>
-                    <p>Set daily and weekly productivity goals. Build motivation with streak tracking. Celebrate your achievements.</p>
-                </div>
-            </div>
-        </div>
+    <section class="wrap dark" id="features">
+      <div class="section-head">
+        <h2>Private by design</h2>
+        <p>Focusledger is for people who want useful work analytics without sending their workday to a cloud dashboard.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3>Focus structure</h3>
+          <p>Run focus sessions, use Pomodoro, keep quick notes, and turn daily work into a journal.</p>
+        </article>
+        <article class="card">
+          <h3>Local analytics</h3>
+          <p>Review patterns, goals, streaks, and exported history from data stored on your Mac.</p>
+        </article>
+        <article class="card">
+          <h3>Pro timeline</h3>
+          <p>Automatic app tracking, optional screenshots, window-title context, and comparison views.</p>
+        </article>
+      </div>
     </section>
 
-    <!-- Privacy Section -->
-    <section class="privacy-section" id="privacy">
-        <div class="container">
-            <div class="privacy-content">
-                <div class="privacy-text">
-                    <h2>Privacy First. Always.</h2>
-                    <p>Unlike other productivity tools, Focusledger was built with privacy as its foundation. Your sensitive work data never leaves your Mac.</p>
-                    <ul class="privacy-features">
-                        <li>All data stored locally on your Mac</li>
-                        <li>Zero cloud servers or data transmission</li>
-                        <li>AI processing happens on-device</li>
-                        <li>No third-party analytics or ads</li>
-                        <li>Export or delete your data anytime</li>
-                        <li>Optional input monitoring for activity levels (no typed content)</li>
-                        <li>Optional screenshots via Screen Recording permission</li>
-                        <li>No keylogging — we never capture what you type</li>
-                    </ul>
-                    <a href="privacy.html" class="btn-secondary" style="margin-top: 16px;">Read Privacy Policy →</a>
-                </div>
-                <div class="privacy-graphic">
-                    <div class="icon">🔒</div>
-                    <h3>Your Data, Your Mac</h3>
-                    <p>No servers. No cloud. No compromise.<br>Your productivity data stays exactly where it belongs — with you.</p>
-                </div>
-            </div>
+    <section class="light" id="pricing">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Choose your edition</h2>
+          <p>Lite stays free/PWYW so you can try the core workflow. Pro is the paid direct-download build with automatic tracking enabled.</p>
         </div>
+        <div class="pricing">
+          <article class="price-card">
+            <img src="assets/focusledger-lite-gumroad-cover.png" alt="Focusledger Lite product cover">
+            <div class="price-body">
+              <div class="price-row">
+                <h3>Focusledger Lite</h3>
+                <div class="price">$0+</div>
+              </div>
+              <p>Best for manual focus planning, Pomodoro, goals, journals, notes, and trying the app.</p>
+              <ul>
+                <li>Focus timer and Pomodoro sessions</li>
+                <li>Goals, streaks, journal, and quick notes</li>
+                <li>Manual/focus-data insights where Apple Intelligence is available</li>
+                <li>Data export and local-first storage</li>
+              </ul>
+              <a class="button primary" href="https://michelpicker.gumroad.com/l/focusledger-lite">Get Lite on Gumroad</a>
+            </div>
+          </article>
+
+          <article class="price-card">
+            <img src="assets/focusledger-pro-gumroad-cover.png" alt="Focusledger Pro product cover">
+            <div class="price-body">
+              <div class="price-row">
+                <h3>Focusledger Pro</h3>
+                <div class="price">$19</div>
+              </div>
+              <p>Launch price. Regular price $24 after July 18, 2026 or the first 100 buyers.</p>
+              <ul>
+                <li>Everything in Lite</li>
+                <li>Automatic app activity tracking</li>
+                <li>Visual activity timeline and detailed app analytics</li>
+                <li>Optional screenshot timeline and window-title context</li>
+              </ul>
+              <a class="button primary" href="https://michelpicker.gumroad.com/l/focusledger">Buy Pro on Gumroad</a>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-title">
-                <h2>Choose Your Version</h2>
-                <p>Both versions keep your data 100% private on your Mac. Both available on the Mac App Store.</p>
-            </div>
-            <div class="pricing-cards">
-                <div class="pricing-card">
-                    <h3>Focusledger Lite</h3>
-                    <div class="price">Mac App Store<span></span></div>
-                    <ul>
-                        <li class="included">Focus timer sessions</li>
-                        <li class="included">Pomodoro technique</li>
-                        <li class="included">Goals &amp; streaks</li>
-                        <li class="included">Daily journal</li>
-                        <li class="included">Quick notes</li>
-                        <li class="included">AI insights (manual data)</li>
-                        <li class="excluded">No automatic tracking</li>
-                        <li class="excluded">No visual timeline</li>
-                        <li class="excluded">No screenshots</li>
-                    </ul>
-                    <a href="https://apps.apple.com/app/focusledger-lite" class="btn-secondary" style="width: 100%; display: block; text-align: center;">Get Focusledger Lite</a>
-                </div>
-                <div class="pricing-card featured">
-                    <h3>Focusledger</h3>
-                    <div class="price">Mac App Store<span></span></div>
-                    <ul>
-                        <li class="included"><strong>Automatic activity tracking</strong></li>
-                        <li class="included"><strong>Visual timeline with screenshots</strong></li>
-                        <li class="included"><strong>Window title capture</strong></li>
-                        <li class="included"><strong>Day/week/month comparison</strong></li>
-                        <li class="included"><strong>Detailed app analytics</strong></li>
-                        <li class="included">Focus timer sessions</li>
-                        <li class="included">Pomodoro technique</li>
-                        <li class="included">Goals &amp; streaks</li>
-                        <li class="included">Daily journal</li>
-                        <li class="included">AI insights (on-device)</li>
-                        <li class="included">Data export</li>
-                    </ul>
-                    <a href="https://apps.apple.com/app/focusledger" class="btn-primary" style="width: 100%; display: block; text-align: center;">Get Focusledger</a>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 40px; color: var(--text-secondary); max-width: 600px; margin-left: auto; margin-right: auto;">
-                <p style="font-size: 14px;">Both apps are available exclusively on the Mac App Store.</p>
-            </div>
+    <section class="light" id="compare">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Feature split</h2>
+          <p>The two builds are intentionally clear: Lite avoids special tracking permissions, Pro enables the full automatic tracker.</p>
         </div>
+        <table class="compare">
+          <thead>
+            <tr><th>Feature</th><th>Lite</th><th>Pro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Focus timer and Pomodoro</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+            <tr><td>Goals, streaks, journal, notes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+            <tr><td>Data export</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+            <tr><td>Automatic activity tracking</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            <tr><td>Window-title capture</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            <tr><td>Visual timeline</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            <tr><td>Optional screenshots</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            <tr><td>Day/week/month comparison analytics</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
-    <!-- Download Section -->
-    <section id="download" style="padding: 80px 0; background: linear-gradient(180deg, transparent 0%, rgba(94, 92, 230, 0.08) 100%);">
-        <div class="container" style="text-align: center;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 800px; margin: 0 auto;">
-                <div style="background: var(--surface); border: 1px solid var(--primary); border-radius: 20px; padding: 40px;">
-                    <h2 style="font-size: 28px; margin-bottom: 8px;">Focusledger</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 24px;">Full-featured productivity tracking</p>
-                    <a href="https://apps.apple.com/app/focusledger" class="btn-primary" style="width: 100%; display: block; text-align: center; padding: 16px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                        Get on the Mac App Store
-                    </a>
-                    <p style="color: var(--text-secondary); font-size: 12px; margin-top: 16px;">One-time purchase. No subscriptions.</p>
-                </div>
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px;">
-                    <h2 style="font-size: 28px; margin-bottom: 8px;">Focusledger Lite</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 24px;">Focus timer, goals & journal</p>
-                    <a href="https://apps.apple.com/app/focusledger-lite" class="btn-secondary" style="width: 100%; display: block; text-align: center; padding: 16px;">
-                        Get on the Mac App Store
-                    </a>
-                    <p style="color: var(--text-secondary); font-size: 12px; margin-top: 16px;">Core productivity features.</p>
-                </div>
-            </div>
-            <div style="margin-top: 32px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                <div style="border-top: 1px solid var(--border); padding-top: 24px; text-align: left;">
-                    <h4 style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">System Requirements</h4>
-                    <ul style="list-style: none; font-size: 13px; color: var(--text-secondary);">
-                        <li style="margin-bottom: 6px;">• macOS 26.0 (Tahoe) or later</li>
-                        <li style="margin-bottom: 6px;">• Apple Silicon or Intel Mac</li>
-                        <li style="margin-bottom: 6px;">• Apple Intelligence for AI features</li>
-                        <li>• ~100 MB disk space</li>
-                    </ul>
-                </div>
-            </div>
+    <section class="privacy-band dark">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Your work stays yours</h2>
+          <p>No cloud account, no third-party analytics, no ads. Pro permissions are requested only for the tracking features you enable. Input Monitoring is used for activity-level counts, not typed content.</p>
         </div>
+        <div class="hero-actions">
+          <a class="button primary" href="https://michelpicker.gumroad.com/l/focusledger">Get Focusledger Pro</a>
+          <a class="button secondary" href="https://michelpicker.gumroad.com/l/focusledger-lite">Download Lite</a>
+        </div>
+      </div>
     </section>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <a href="https://focusledgerapp.com/" class="logo">Focusledger</a>
-                    <p>AI-powered productivity tracking for Mac.<br>Your data stays on your device.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="https://apps.apple.com/app/focusledger">Focusledger</a></li>
-                        <li><a href="https://apps.apple.com/app/focusledger-lite">Focusledger Lite</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="support.html">Help Center</a></li>
-                        <li><a href="support.html#faq">FAQ</a></li>
-                        <li><a href="mailto:mip@gmx.biz">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Use</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2026 Focusledger. All rights reserved.</p>
-                <div class="language-selector">
-                    <span>🌐</span>
-                    <select onchange="changeLanguage(this.value)">
-                        <option value="en">English</option>
-                        <option value="de">Deutsch</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                        <option value="it">Italiano</option>
-                        <option value="pt">Português</option>
-                        <option value="ja">日本語</option>
-                        <option value="ko">한국어</option>
-                        <option value="zh">中文</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function changeLanguage(lang) {
-            if (lang !== 'en') {
-                window.location.href = lang + '/index.html';
-            }
-        }
-    </script>
+  <footer class="footer wrap">
+    <span>© 2026 Focusledger. Direct macOS builds by minh.systems.</span>
+  </footer>
 </body>
 </html>
